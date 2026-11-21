@@ -10,13 +10,16 @@ from app.routes.infrastructure import infrastructure_bp
 from app.config import Config
 from app.routes.dashboard import dashboard_bp
 
-def create_app():
+def create_app(test_config=None):
+
     load_dotenv("../.env", override=True)
 
     app = Flask(__name__)
     app.config.from_object(Config)
+    
     app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
-
+    if test_config:
+        app.config.update(test_config)
     db.init_app(app)
 
     CORS(app)
