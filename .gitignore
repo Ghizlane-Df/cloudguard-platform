@@ -47,3 +47,11 @@ crash.log
 # Build and temporary files
 npm-debug.log*
 .DS_Store
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate*
+terraform/state-backup.json
+crash.log

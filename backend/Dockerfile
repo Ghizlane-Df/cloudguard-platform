@@ -17,7 +17,14 @@ RUN apt-get update \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Create a non-root user
+RUN groupadd --gid 10001 appuser \
+    && useradd --uid 10001 --gid 10001 --no-create-home --shell /usr/sbin/nologin appuser
+
+# Copy application files
+COPY --chown=10001:10001 . .
+
+USER 10001:10001
 
 EXPOSE 5000
 
