@@ -11,6 +11,29 @@ jobs:
   backend-tests:
     name: Backend Tests
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: cloudguard
+          POSTGRES_USER: cloudguard
+          POSTGRES_PASSWORD: cloudguard_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cloudguard -d cloudguard"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      SECRET_KEY: "cloudguard-ci-test-only-key"
+      FLASK_DEBUG: "false"
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      DB_NAME: cloudguard
+      DB_USER: cloudguard
+      DB_PASSWORD: cloudguard_test_password
 
     steps:
       - name: Checkout repository
@@ -30,9 +53,6 @@ jobs:
 
       - name: Run tests
         working-directory: backend
-        env:
-          SECRET_KEY: "cloudguard-ci-test-only-key"
-          FLASK_DEBUG: "false"
         run: python -m pytest -v
 
   frontend-build:
