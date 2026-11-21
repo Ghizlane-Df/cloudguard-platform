@@ -30,6 +30,9 @@ jobs:
 
       - name: Run tests
         working-directory: backend
+        env:
+          SECRET_KEY: "cloudguard-ci-test-only-key"
+          FLASK_DEBUG: "false"
         run: python -m pytest -v
 
   frontend-build:
