@@ -1,0 +1,39 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: cloudguard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      serviceAccountName: cloudguard-backend
+      containers:
+        - name: backend
+          image: cloudguard-backend:v4
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: cloudguard
+            - name: DB_USER
+              value: cloudguard
+            - name: DB_PASSWORD
+              valueFrom:
+               secretKeyRef:
+                name: cloudguard-db-secret
+                key: DB_PASSWORD
+            - name: FLASK_DEBUG
+              value: "false"

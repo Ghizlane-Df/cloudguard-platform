@@ -20,3 +20,30 @@ dist/
 
 # Logs
 *.log
+# Python cache and tests
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+
+# Environment and secrets
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Docker archives
+*.tar
+
+# Security scan reports
+backend-trivy-*.json
+cloudguard-sbom.json
+debian-vulnerabilities.csv
+
+# Terraform
+*.tfstate*
+crash.log
+
+# Build and temporary files
+npm-debug.log*
+.DS_Store
