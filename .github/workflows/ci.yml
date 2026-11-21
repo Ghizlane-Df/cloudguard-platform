@@ -80,6 +80,42 @@ jobs:
         working-directory: backend
         run: python -m bandit -r app -ll
 
+  trivy-security:
+    name: Trivy Docker Image Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Backend Docker Image
+        run: docker build -t cloudguard-backend:ci ./backend
+
+      - name: Build Frontend Docker Image
+        run: docker build -t cloudguard-frontend:ci ./frontend
+
+      - name: Scan Backend Image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: cloudguard-backend:ci
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Scan Frontend Image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: cloudguard-frontend:ci
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
   frontend-build:
     name: Frontend Build
     runs-on: ubuntu-latest
